@@ -12,6 +12,6 @@ public class AuthorMapper
     e.HasKey(o => o.Id);
     e.Property(o => o.Id)
         .HasColumnName("author_id")
-        .UseIdentityColumn();
+        .UseIdentityAlwaysColumn();
   }
 }
