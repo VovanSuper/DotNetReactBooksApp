@@ -26,10 +26,15 @@ namespace BooksApi.DAL.Helpers
         return;
       }
 
-      var (authorPart1, authorPart2) = (new Author { Name = "Author 1" }, new Author { Name = "Author 2" });
+      var (authorPart1, authorPart2, authorPart3) = (
+        new Author { Name = "Vovan Suppa" }, 
+        new Author { Name = "Leo Tolstoy" },
+        new Author { Name = "William Shakespeare" }
+      );
 
       var author1 = _booksCtx.Add<Author>(authorPart1).Entity;
       var author2 = _booksCtx.Add<Author>(authorPart2).Entity;
+      var author3 = _booksCtx.Add<Author>(authorPart3).Entity;
 
       var (genrePart1, genrePart2, genrePart3) = (
         new Genre { GenreName = "Science Fiction" },
@@ -45,26 +50,26 @@ namespace BooksApi.DAL.Helpers
         {
             new Book
             {
-                Name = "Science for Dummies",
+                Name = "Science for the Dummies",
                 Genre = genre1,
                 Author = author1,
             },
             new Book
             {
-                Name = "Book 2",
+                Name = "Dummy Book 2",
                 Author = author1,
                 Genre = genre2,
             },
             new Book
             {
-                Name = "Non Drama at all",
-                Author = author1,
+                Name = "Not a Drama at all",
+                Author = author2,
                 Genre = genre2,
             },
             new Book
             {
                 Name = "Romeo and Juliet",
-                Author = author2,
+                Author = author3,
                 Genre = genre3
             }
         };
