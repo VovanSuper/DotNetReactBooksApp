@@ -24,7 +24,8 @@ public class BooksMapper
       .HasForeignKey(b => b.AuthorId);
 
     e.HasOne(b => b.Genre)
-      .WithMany(g => g.Books);
+      .WithMany(g => g.Books)
+      .HasForeignKey(b => b.GenreId);
 
   }
 }

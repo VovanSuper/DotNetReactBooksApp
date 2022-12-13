@@ -338,3 +338,50 @@
 2022-12-13 18:02:34.2512 Info Shutdown() called. Logger closing...
 2022-12-13 18:02:34.2512 Info Closing old configuration.
 2022-12-13 18:02:34.2512 Info Logger has been closed down.
+2022-12-13 18:15:45.3606 Info Message Template Auto Format enabled
+2022-12-13 18:15:45.3606 Info Loading assembly: NLog.Web.AspNetCore
+2022-12-13 18:15:45.3776 Info Registered target FileTarget(Name=allfile)
+2022-12-13 18:15:45.3776 Info Registered target FileTarget(Name=ownFile-web)
+2022-12-13 18:15:45.3776 Info Registered target ConsoleTarget(Name=lifetimeConsole)
+2022-12-13 18:15:45.3776 Info Validating config: TargetNames=allfile, lifetimeConsole, ownFile-web, ConfigItems=56, FilePath=D:\Projects\GitHub\DotNetReactBooksApp\bin\Debug\net7.0\NLog.config
+2022-12-13 18:15:45.4541 Info Validating config: TargetNames=allfile, lifetimeConsole, ownFile-web, ConfigItems=56, FilePath=D:\Projects\GitHub\DotNetReactBooksApp\bin\Debug\net7.0\NLog.config
+2022-12-13 18:15:45.4691 Info Shutdown() called. Logger closing...
+2022-12-13 18:15:45.4691 Info Closing old configuration.
+2022-12-13 18:15:45.4691 Info Logger has been closed down.
+2022-12-13 18:16:10.7315 Info Message Template Auto Format enabled
+2022-12-13 18:16:10.7315 Info Loading assembly: NLog.Web.AspNetCore
+2022-12-13 18:16:10.7550 Info Registered target FileTarget(Name=allfile)
+2022-12-13 18:16:10.7550 Info Registered target FileTarget(Name=ownFile-web)
+2022-12-13 18:16:10.7550 Info Registered target ConsoleTarget(Name=lifetimeConsole)
+2022-12-13 18:16:10.7672 Info Validating config: TargetNames=allfile, lifetimeConsole, ownFile-web, ConfigItems=56, FilePath=D:\Projects\GitHub\DotNetReactBooksApp\bin\Debug\net7.0\NLog.config
+2022-12-13 18:16:10.8521 Info Validating config: TargetNames=allfile, lifetimeConsole, ownFile-web, ConfigItems=56, FilePath=D:\Projects\GitHub\DotNetReactBooksApp\bin\Debug\net7.0\NLog.config
+2022-12-13 18:20:26.9409 Info Shutdown() called. Logger closing...
+2022-12-13 18:20:26.9409 Info Closing old configuration.
+2022-12-13 18:20:26.9409 Info Logger has been closed down.
+2022-12-13 18:20:37.7557 Info Message Template Auto Format enabled
+2022-12-13 18:20:37.7557 Info Loading assembly: NLog.Web.AspNetCore
+2022-12-13 18:20:37.7830 Info Registered target FileTarget(Name=allfile)
+2022-12-13 18:20:37.7830 Info Registered target FileTarget(Name=ownFile-web)
+2022-12-13 18:20:37.7830 Info Registered target ConsoleTarget(Name=lifetimeConsole)
+2022-12-13 18:20:37.7830 Info Validating config: TargetNames=allfile, lifetimeConsole, ownFile-web, ConfigItems=56, FilePath=D:\Projects\GitHub\DotNetReactBooksApp\bin\Debug\net7.0\NLog.config
+2022-12-13 18:20:37.8683 Info Validating config: TargetNames=allfile, lifetimeConsole, ownFile-web, ConfigItems=56, FilePath=D:\Projects\GitHub\DotNetReactBooksApp\bin\Debug\net7.0\NLog.config
+2022-12-13 18:20:37.8741 Info Shutdown() called. Logger closing...
+2022-12-13 18:20:37.8741 Info Closing old configuration.
+2022-12-13 18:20:37.8892 Info Logger has been closed down.
+2022-12-13 18:20:49.1314 Info Message Template Auto Format enabled
+2022-12-13 18:20:49.1386 Info Loading assembly: NLog.Web.AspNetCore
+2022-12-13 18:20:49.1564 Info Registered target FileTarget(Name=allfile)
+2022-12-13 18:20:49.1564 Info Registered target FileTarget(Name=ownFile-web)
+2022-12-13 18:20:49.1564 Info Registered target ConsoleTarget(Name=lifetimeConsole)
+2022-12-13 18:20:49.1696 Info Validating config: TargetNames=allfile, lifetimeConsole, ownFile-web, ConfigItems=56, FilePath=D:\Projects\GitHub\DotNetReactBooksApp\bin\Debug\net7.0\NLog.config
+2022-12-13 18:20:49.2432 Info Validating config: TargetNames=allfile, lifetimeConsole, ownFile-web, ConfigItems=56, FilePath=D:\Projects\GitHub\DotNetReactBooksApp\bin\Debug\net7.0\NLog.config
+2022-12-13 18:25:07.4121 Info Shutdown() called. Logger closing...
+2022-12-13 18:25:07.4121 Info Closing old configuration.
+2022-12-13 18:25:07.4121 Info Logger has been closed down.
+2022-12-13 18:25:13.1106 Info Message Template Auto Format enabled
+2022-12-13 18:25:13.1106 Info Loading assembly: NLog.Web.AspNetCore
+2022-12-13 18:25:13.1332 Info Registered target FileTarget(Name=allfile)
+2022-12-13 18:25:13.1332 Info Registered target FileTarget(Name=ownFile-web)
+2022-12-13 18:25:13.1332 Info Registered target ConsoleTarget(Name=lifetimeConsole)
+2022-12-13 18:25:13.1442 Info Validating config: TargetNames=allfile, lifetimeConsole, ownFile-web, ConfigItems=56, FilePath=D:\Projects\GitHub\DotNetReactBooksApp\bin\Debug\net7.0\NLog.config
+2022-12-13 18:25:13.2149 Info Validating config: TargetNames=allfile, lifetimeConsole, ownFile-web, ConfigItems=56, FilePath=D:\Projects\GitHub\DotNetReactBooksApp\bin\Debug\net7.0\NLog.config

@@ -27,7 +27,8 @@ try
     opts.OutputFormatters.RemoveType<SystemTextJsonOutputFormatter>();
     opts.OutputFormatters.Add(new SystemTextJsonOutputFormatter(new JsonSerializerOptions(JsonSerializerDefaults.Web)
     {
-      ReferenceHandler = ReferenceHandler.IgnoreCycles
+      ReferenceHandler = ReferenceHandler.IgnoreCycles,
+      DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     }));
   });
   appBuilder.Services.AddEndpointsApiExplorer();
