@@ -3,7 +3,7 @@ using BooksApi.DAL.Models;
 
 namespace BooksApi.DAL.Helpers
 {
-  public class Seeder: ISeeder
+  public class Seeder : ISeeder
   {
 
     private readonly BooksContext _booksCtx;
@@ -26,42 +26,50 @@ namespace BooksApi.DAL.Helpers
         return;
       }
 
-      var authors = new List<Author>
-        {
-            new Author
-            {
-                Name = "Author 1"
-            },
-            new Author
-            {
-                Name = "Author 2"
-            }
-        };
+      var (authorPart1, authorPart2) = (new Author { Name = "Author 1" }, new Author { Name = "Author 2" });
+
+      var author1 = _booksCtx.Add<Author>(authorPart1).Entity;
+      var author2 = _booksCtx.Add<Author>(authorPart2).Entity;
+
+      var (genrePart1, genrePart2, genrePart3) = (
+        new Genre { GenreName = "Science Fiction" },
+        new Genre { GenreName = "Non Fiction" },
+        new Genre { GenreName = "Drama" }
+      );
+
+      var genre1 = _booksCtx.Add<Genre>(genrePart1).Entity;
+      var genre2 = _booksCtx.Add<Genre>(genrePart2).Entity;
+      var genre3 = _booksCtx.Add<Genre>(genrePart3).Entity;
 
       var books = new List<Book>
         {
             new Book
             {
-                Name = "Book 1 ",
-                Genre = "Since Fiction",
-                Author = 1,
+                Name = "Science for Dummies",
+                Genre = genre1,
+                Author = author1,
             },
             new Book
             {
                 Name = "Book 2",
-                Author = 1,
-                Genre = "Non Fiction",
-
+                Author = author1,
+                Genre = genre2,
             },
             new Book
             {
-                Name = "Book 3",
-                Author = 2,
-                Genre = "Non Fiction"
+                Name = "Non Drama at all",
+                Author = author1,
+                Genre = genre2,
+            },
+            new Book
+            {
+                Name = "Romeo and Juliet",
+                Author = author2,
+                Genre = genre3
             }
         };
 
-      _booksCtx.Authors?.AddRange(authors);
+      // _booksCtx.Authors?.AddRange(new List<Author> { author1, author2 });
       _booksCtx.Books.AddRange(books);
       _booksCtx.SaveChanges();
     }

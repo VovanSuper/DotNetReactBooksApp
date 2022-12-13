@@ -11,14 +11,20 @@ public class BooksMapper
     e.ToTable("books");
     e.HasKey(o => o.Id);
     e.Property(o => o.Id)
-        .HasColumnName("book_id")
+        .HasColumnName("Book_id")
         .UseIdentityAlwaysColumn();
 
-    e.Property(o => o.Date).HasDefaultValueSql("now()").IsRequired();
+    e.Property(o => o.Year).HasDefaultValueSql("date_part('year', now())").IsRequired();
+    // e.Property(b => b.Author)
+    //   .HasColumnName("Author_id")
+    //   .IsRequired();
 
-    e.Property(o => o.Author)
-        .HasColumnName("author_id")
-        .IsRequired(true);
+    e.HasOne(b => b.Author)
+      .WithMany(a => a.Books)
+      .HasForeignKey(b => b.AuthorId);
+
+    e.HasOne(b => b.Genre)
+      .WithMany(g => g.Books);
 
   }
 }

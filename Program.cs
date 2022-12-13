@@ -5,6 +5,9 @@ using BooksApi.DAL.Helpers;
 using BooksApi.DAL.Services;
 using BooksApi.DAL.Interfaces;
 using BooksApi.DAL.Repositories;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var APP_URL = "http://localhost:8085";
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -19,7 +22,14 @@ try
   appBuilder.Services.AddScoped<IBooksCrudRepository, BooksRepository>();
   appBuilder.Services.AddScoped<IBooksService, BooksService>();
 
-  appBuilder.Services.AddControllers();
+  appBuilder.Services.AddControllers(opts =>
+  {
+    opts.OutputFormatters.RemoveType<SystemTextJsonOutputFormatter>();
+    opts.OutputFormatters.Add(new SystemTextJsonOutputFormatter(new JsonSerializerOptions(JsonSerializerDefaults.Web)
+    {
+      ReferenceHandler = ReferenceHandler.IgnoreCycles
+    }));
+  });
   appBuilder.Services.AddEndpointsApiExplorer();
   appBuilder.Services.AddSwaggerGen();
 
