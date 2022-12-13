@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BooksApi.DAL.Models;
-using BooksApi.DAL.Services;
+using BooksApi.DAL.Interfaces;
 
 namespace BooksApi.Controllers;
 
@@ -8,35 +8,54 @@ namespace BooksApi.Controllers;
 [ApiController]
 public class BooksController : ControllerBase
 {
-  private readonly BooksSvc _booksSvc;
+  private readonly IBooksService _booksSvc;
+  private readonly ILogger<BooksController> _logger;
 
-  public BooksController(BooksSvc booksSvc)
+  public BooksController(IBooksService booksSvc, ILogger<BooksController> logger)
   {
     _booksSvc = booksSvc;
+    _logger = logger;
   }
 
   [HttpGet]
-  public async Task<ActionResult<IEnumerable<Book>>> GetBooks() => await _booksSvc.GetAllBooks();
+  public async Task<ActionResult<IEnumerable<Book>>> GetBooks() => await _booksSvc.GetAll();
 
   [HttpGet("{id}")]
   public async Task<ActionResult<Book>> GetBook(int id)
   {
-    var book = await _booksSvc.GetBookById(id);
-
-    if (book == null)
+    try
     {
-      return NotFound();
-    }
+      var book = await _booksSvc.GetById(id);
+      _logger.LogInformation($"GetBook: {id}, book found {book}");
 
-    return Ok(book);
+      if (book == null)
+      {
+        return NotFound();
+      }
+
+      return Ok(book);
+    }
+    catch (Exception e)
+    {
+      _logger.LogError(e, "Error on GetBook Action");
+      return BadRequest(e);
+    }
   }
 
 
   [HttpPost]
   public async Task<ActionResult<Book>> CreateBook(Book book)
   {
-    var newBook = await _booksSvc.CreateBook(book);
-    return CreatedAtAction(nameof(CreateBook), new { id = newBook.Id }, newBook);
+    try
+    {
+      var newBook = await _booksSvc.Create(book);
+      return CreatedAtAction(nameof(CreateBook), new { id = newBook.Id }, newBook);
+    }
+    catch (Exception e)
+    {
+      _logger.LogError(e, "Error on CreateBook");
+      return BadRequest(e.Message);
+    }
   }
 
   [HttpDelete("{id}")]
@@ -44,12 +63,14 @@ public class BooksController : ControllerBase
   {
     try
     {
-      var book = await _booksSvc.DeleteBookById(id);
+      var book = await _booksSvc.DeleteById(id);
+
       return NoContent();
     }
-    catch (Exception)
+    catch (Exception e)
     {
-      return NotFound();
+      _logger.LogError(e, "Error on DeleteBookById");
+      return BadRequest(e);
     }
 
   }

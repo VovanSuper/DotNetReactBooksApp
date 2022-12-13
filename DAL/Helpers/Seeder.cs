@@ -1,8 +1,9 @@
-﻿using BooksApi.DAL.Models;
+﻿using BooksApi.DAL.Interfaces;
+using BooksApi.DAL.Models;
 
 namespace BooksApi.DAL.Helpers
 {
-  public class Seeder
+  public class Seeder: ISeeder
   {
 
     private readonly BooksContext _booksCtx;
@@ -29,12 +30,10 @@ namespace BooksApi.DAL.Helpers
         {
             new Author
             {
-                Id = 1,
                 Name = "Author 1"
             },
             new Author
             {
-                Id = 2,
                 Name = "Author 2"
             }
         };
@@ -43,14 +42,12 @@ namespace BooksApi.DAL.Helpers
         {
             new Book
             {
-                Id = 1,
                 Name = "Book 1 ",
                 Genre = "Since Fiction",
                 Author = 1,
             },
             new Book
             {
-                Id = 2,
                 Name = "Book 2",
                 Author = 1,
                 Genre = "Non Fiction",
@@ -58,14 +55,13 @@ namespace BooksApi.DAL.Helpers
             },
             new Book
             {
-                Id = 3,
                 Name = "Book 3",
                 Author = 2,
                 Genre = "Non Fiction"
             }
         };
 
-      _booksCtx.Authors.AddRange(authors);
+      _booksCtx.Authors?.AddRange(authors);
       _booksCtx.Books.AddRange(books);
       _booksCtx.SaveChanges();
     }

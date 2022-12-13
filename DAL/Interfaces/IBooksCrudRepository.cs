@@ -1,5 +1,3 @@
-﻿using BooksApi.DAL.Models;
+﻿namespace BooksApi.DAL.Interfaces;
 
-namespace BooksApi.DAL.Interfaces;
-
-public interface IBooksCrudRepository : ICrudRepository<Book> { }
+public interface IBooksCrudRepository : ICrudRepository<BooksApi.DAL.Models.Book> { }

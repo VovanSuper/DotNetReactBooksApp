@@ -12,7 +12,7 @@ public class BooksMapper
     e.HasKey(o => o.Id);
     e.Property(o => o.Id)
         .HasColumnName("book_id")
-        .UseIdentityColumn();
+        .UseIdentityAlwaysColumn();
 
     e.Property(o => o.Date).HasDefaultValueSql("now()").IsRequired();
 

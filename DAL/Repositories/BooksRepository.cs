@@ -2,9 +2,8 @@
 using BooksApi.DAL.Interfaces;
 using BooksApi.DAL.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
-namespace Api.DAL.Repositories;
+namespace BooksApi.DAL.Repositories;
 
 public class BooksRepository : IBooksCrudRepository
 {
