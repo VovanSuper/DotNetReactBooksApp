@@ -8,7 +8,7 @@ namespace BooksApi.DAL.Repositories;
 public class BooksRepository : IBooksCrudRepository
 {
   private readonly BooksContext _booksCtx;
-  
+
   public BooksRepository(BooksContext ctx)
   {
     this._booksCtx = ctx;
@@ -22,15 +22,20 @@ public class BooksRepository : IBooksCrudRepository
       this._booksCtx.SaveChanges();
       return newOrder.Entity;
     }
-    catch (Exception e)
+    catch
     {
-      Console.WriteLine(e.Message);
       throw;
     }
   }
 
-  public Task<List<Book>>? GetAll() => _booksCtx.Books.ToListAsync<Book>();
-  public Task<Book>? GetById(int id) => _booksCtx.Books.FirstOrDefaultAsync(b => b.Id == id);
+  public async Task<IEnumerable<Book>>? GetAll() => _booksCtx.Books.Select(b => new Book
+  {
+    Id = b.Id,
+    Name = b.Name,
+    GenreId = b.GenreId,
+    Author = new Author { Id = b.AuthorId, Name = b.Author.Name }
+  });
+  public async Task<Book>? GetById(int id) => await _booksCtx.Books?.FirstOrDefaultAsync(b => b.Id == id);
   public async Task<Book> Create(Book book)
   {
     var updatedOrder = await _booksCtx.AddAsync(book);
@@ -45,7 +50,7 @@ public class BooksRepository : IBooksCrudRepository
     {
       throw new Exception($"Book with Id {id} not found!");
     }
-    
+
     var deleteOrderResult = _booksCtx.Books?.Remove(book);
     _booksCtx.SaveChanges();
     return deleteOrderResult!.Entity;

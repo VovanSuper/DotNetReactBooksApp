@@ -7,7 +7,7 @@ docker compose up -d
 echo Starting the server - api available on Url: `:8085/api/[Controller]` `Books\Auth`, swagger: `:8085/swagger`
 dotnet run
 
-echo Starting Client app...
-pushd $CLIENT_ROOT
-npm i && npm start
-popd
+# echo Starting Client app...
+# pushd $CLIENT_ROOT
+# npm i && npm start
+# popd

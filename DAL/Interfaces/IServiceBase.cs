@@ -1,9 +1,9 @@
 namespace BooksApi.DAL.Interfaces;
 
-public interface IServeBase<T> where T : class
+public interface IServeBase<T, D> where T : class
 {
-  Task<List<T>>? GetAll();
+  Task<IEnumerable<T>>? GetAll();
   Task<T>? GetById(int id);
-  Task<T> Create(T entity);
+  Task<T> Create(D entity);
   Task<T>? DeleteById(int id);
 }

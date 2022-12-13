@@ -11,7 +11,10 @@ public class AuthorMapper
     e.ToTable("authors");
     e.HasKey(o => o.Id);
     e.Property(o => o.Id)
-        .HasColumnName("author_id")
+        .HasColumnName("Author_id")
         .UseIdentityAlwaysColumn();
+
+    e.HasMany(a => a.Books)
+        .WithOne(b => b.Author);
   }
 }
