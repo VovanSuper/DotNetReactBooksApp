@@ -2,9 +2,11 @@
 using BooksApi.DAL.Models;
 using BooksApi.DAL.Interfaces;
 using BooksApi.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BooksApi.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class BooksController : ControllerBase
@@ -18,8 +20,18 @@ public class BooksController : ControllerBase
     _logger = logger;
   }
 
+  [AllowAnonymous]
   [HttpGet]
-  public async Task<ActionResult<IEnumerable<Book>>> GetBooks() => Ok(await _booksSvc.GetAll());
+  public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
+  {
+    var books = await _booksSvc.GetAll();
+    if (books == null || books.Count() == 0)
+    {
+      return NotFound();
+    }
+
+    return Ok(books);
+  }
 
   [HttpGet("{id}")]
   public async Task<ActionResult<Book>> GetBook(int id)
@@ -39,7 +51,7 @@ public class BooksController : ControllerBase
     catch (Exception e)
     {
       _logger.LogError(e, "Error on GetBook Action");
-      return BadRequest(e.Message);
+      return BadRequest(new { message = e.Message });
     }
   }
 
@@ -55,7 +67,7 @@ public class BooksController : ControllerBase
     catch (Exception e)
     {
       _logger.LogError(e, "Error on CreateBook");
-      return BadRequest(e.Message);
+      return BadRequest(new { message = e.Message });
     }
   }
 
@@ -65,12 +77,12 @@ public class BooksController : ControllerBase
     try
     {
       var newBook = await _booksSvc.Modify(book);
-       return CreatedAtAction(nameof(ChangeBook), new { id = newBook.Id }, newBook);
+      return CreatedAtAction(nameof(ChangeBook), new { id = newBook.Id }, newBook);
     }
     catch (Exception e)
     {
       _logger.LogError(e, "Error on ChangeBook");
-      return BadRequest(e.Message);
+      return BadRequest(new { message = e.Message });
     }
 
   }
@@ -87,7 +99,7 @@ public class BooksController : ControllerBase
     catch (Exception e)
     {
       _logger.LogError(e, "Error on DeleteBookById");
-      return BadRequest(e.Message);
+      return BadRequest(new { message = e.Message });
     }
 
   }

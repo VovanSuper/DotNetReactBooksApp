@@ -9,5 +9,5 @@ public class User
   public string? Email { get; set; }
 
   [JsonIgnore()]
-  public string? Password { get; private set; }
+  public string? Password { get;  set; }
 }

@@ -6,19 +6,19 @@ namespace BooksApi.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-public class UsersController : ControllerBase
+public class AuthController : ControllerBase
 {
     private IAuthService _authSvc;
 
-    public UsersController(IAuthService authService)
+    public AuthController(IAuthService authService)
     {
         _authSvc = authService;
     }
 
     [HttpPost("authenticate")]
-    public IActionResult Authenticate(AuthEmailPassDTO authData)
+    public async Task<IActionResult> AuthenticateAsync(AuthEmailPassDTO authData)
     {
-        var response = _authSvc.AuthenticateAsync(authData);
+        var response = await _authSvc.AuthenticateAsync(authData);
 
         if (response == null)
             return BadRequest(new { message = "Username or password is incorrect" });

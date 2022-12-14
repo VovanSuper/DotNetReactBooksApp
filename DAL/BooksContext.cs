@@ -29,10 +29,7 @@ public class BooksContext : DbContext
   protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
   {
     //var configuration = new ConfigurationBuilder().AddConfiguration()
-    // var connStr = Configuration.GetValue<ConnectionStrings>("ConnectionStrings");
     var connStrings = Configuration.GetConnectionString("BooksDbConnection");
-
-
     if (connStrings == null)
     {
       Console.WriteLine($"No Connection String could be read from config {connStrings}");
