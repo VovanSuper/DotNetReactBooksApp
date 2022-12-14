@@ -14,28 +14,19 @@ public class BooksRepository : IBooksCrudRepository
     this._booksCtx = ctx;
   }
 
-  public async Task<Book> Add(Book book)
-  {
-    try
-    {
-      var newOrder = await _booksCtx.AddAsync(book);
-      this._booksCtx.SaveChanges();
-      return newOrder.Entity;
-    }
-    catch
-    {
-      throw;
-    }
-  }
-
   public async Task<IEnumerable<Book>>? GetAll() => _booksCtx.Books.Select(b => new Book
   {
     Id = b.Id,
     Name = b.Name,
-    GenreId = b.GenreId,
+    Genre = new Genre { Id = b.GenreId, GenreName = b.Genre.GenreName },
     Author = new Author { Id = b.AuthorId, Name = b.Author.Name }
   });
-  public async Task<Book>? GetById(int id) => await _booksCtx.Books?.FirstOrDefaultAsync(b => b.Id == id);
+
+  public async Task<Book>? GetById(int id) => await _booksCtx.Books
+    .Include(b => b.Author)
+    .Include(b => b.Genre)
+    .FirstOrDefaultAsync(b => b.Id == id);
+
   public async Task<Book> Create(Book book)
   {
     var updatedOrder = await _booksCtx.AddAsync(book);
@@ -45,7 +36,8 @@ public class BooksRepository : IBooksCrudRepository
 
   public async Task<Book>? DeleteById(int id)
   {
-    var book = await _booksCtx.Books!.FirstOrDefaultAsync(b => b.Id == id);
+    var book = await _booksCtx.Books.FirstOrDefaultAsync(b => b.Id == id);
+
     if (book == null)
     {
       throw new Exception($"Book with Id {id} not found!");
@@ -53,8 +45,16 @@ public class BooksRepository : IBooksCrudRepository
 
     var deleteOrderResult = _booksCtx.Books?.Remove(book);
     _booksCtx.SaveChanges();
-    return deleteOrderResult!.Entity;
+    return deleteOrderResult.Entity;
 
   }
 
+  public Task<Book> Modify(Book entity)
+  {
+    var updateResult = _booksCtx.Update<Book>(entity);
+    updateResult.State = EntityState.Modified;
+    _booksCtx.SaveChanges();
+
+    return Task.FromResult<Book>(updateResult.Entity);
+  }
 }

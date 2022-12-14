@@ -11,7 +11,9 @@ public class BooksService : IBooksService
   public BooksService(IBooksCrudRepository booksRepo) => _booksRepo = booksRepo ?? throw new ArgumentNullException(nameof(booksRepo));
 
   public async Task<IEnumerable<Book>>? GetAll() => await _booksRepo.GetAll();
+
   public Task<Book>? GetById(int Id) => _booksRepo.GetById(Id);
+  
   public Task<Book> Create(CreateBookDTO book) => _booksRepo.Create(new Book
   {
     Name = book.Name,
@@ -20,11 +22,27 @@ public class BooksService : IBooksService
     AuthorId = book.AuthorId,
   });
 
-
   public Task<Book>? DeleteById(int Id) => _booksRepo.DeleteById(Id);
 
-  public Task<Book> Create(Book entity)
+  public async Task<Book> Modify(PatchBookDTO entity)
   {
-    throw new NotImplementedException();
+    var book = await GetById(entity.Id);
+    if (book == null)
+    {
+      throw new Exception($"Book {entity} doesnot exist in DB");
+    }
+    if (entity.AuthorId != null)
+      book.AuthorId = (int)entity.AuthorId;
+
+    if (entity.GenreId != null)
+      book.GenreId = (int)entity.GenreId;
+
+    if (entity.Name != null)
+      book.Name = (string)entity.Name;
+
+    if (entity.Year != null)
+      book.Year = (int)entity.Year;
+
+    return await _booksRepo.Modify(book);
   }
 }
