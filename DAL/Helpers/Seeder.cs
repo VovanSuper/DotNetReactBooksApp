@@ -1,5 +1,6 @@
 ﻿using BooksApi.DAL.Interfaces;
 using BooksApi.DAL.Models;
+using BooksApi.Utils;
 
 namespace BooksApi.DAL.Helpers;
 
@@ -7,10 +8,12 @@ public class Seeder : ISeeder
 {
 
   private readonly BooksContext _booksCtx;
+  private readonly AuthUtils _authUtils;
 
-  public Seeder(BooksContext booksCtx)
+  public Seeder(BooksContext booksCtx, AuthUtils utils)
   {
     this._booksCtx = booksCtx;
+    this._authUtils = utils;
   }
 
   public void Seed()
@@ -26,6 +29,7 @@ public class Seeder : ISeeder
       return;
     }
 
+    /// -- Seed authors ---- ///
     var (authorPart1, authorPart2, authorPart3) = (
       new Author { Name = "Vovan Suppa" },
       new Author { Name = "Leo Tolstoy" },
@@ -35,7 +39,9 @@ public class Seeder : ISeeder
     var author1 = _booksCtx.Add<Author>(authorPart1).Entity;
     var author2 = _booksCtx.Add<Author>(authorPart2).Entity;
     var author3 = _booksCtx.Add<Author>(authorPart3).Entity;
+    /// -- end Seed authors ---- ///
 
+    /// -- Seed genres ---- ///
     var (genrePart1, genrePart2, genrePart3) = (
       new Genre { GenreName = "Science Fiction" },
       new Genre { GenreName = "Non Fiction" },
@@ -45,7 +51,9 @@ public class Seeder : ISeeder
     var genre1 = _booksCtx.Add<Genre>(genrePart1).Entity;
     var genre2 = _booksCtx.Add<Genre>(genrePart2).Entity;
     var genre3 = _booksCtx.Add<Genre>(genrePart3).Entity;
+    /// -- end Seed genres ---- ///
 
+    /// -- Seed books ---- ///
     var books = new List<Book>
         {
             new Book
@@ -73,9 +81,18 @@ public class Seeder : ISeeder
                 Genre = genre3
             }
         };
-
-    // _booksCtx.Authors?.AddRange(new List<Author> { author1, author2 });
     _booksCtx.Books.AddRange(books);
+    /// -- end Seed books ---- ///
+
+    /// Seed Users
+    _booksCtx.Users?.AddRange(new List<User> {
+      new User { Name = "Test", Email = "Test@mail.ru", Password = _authUtils.Hash("Test") },
+      new User { Name = "test", Email = "test@mail.ru", Password = _authUtils.Hash("test") },
+      new User { Name = "User", Email = "Tser@mail.ru", Password = _authUtils.Hash("User") },
+      new User { Name = "Admin", Email = "Admin@mail.ru", Password = _authUtils.Hash("Admin") }
+    });
+    /// end Seed Users
+
     _booksCtx.SaveChanges();
   }
 }

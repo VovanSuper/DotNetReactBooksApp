@@ -17,6 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.*" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.*" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.*">
@@ -28,7 +29,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.*" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="5.*" />
     <PackageReference Include="NLog" Version="5.*" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.1" /> 
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.*" /> 
   </ItemGroup>
 
 </Project>
