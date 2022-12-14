@@ -10,6 +10,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 var APP_URL = "http://localhost:8085";
+var CLIENT_URL = "http://localhost:8080"
+;
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");
 
@@ -17,22 +19,26 @@ try
 {
   var appBuilder = WebApplication.CreateBuilder(args);
 
-  appBuilder.Services.AddDbContext<BooksContext>(ServiceLifetime.Singleton);
-  appBuilder.Services.AddSingleton<ISeeder, Seeder>();
-  appBuilder.Services.AddScoped<IBooksCrudRepository, BooksRepository>();
-  appBuilder.Services.AddScoped<IBooksService, BooksService>();
-
-  appBuilder.Services.AddControllers(opts =>
-  {
-    opts.OutputFormatters.RemoveType<SystemTextJsonOutputFormatter>();
-    opts.OutputFormatters.Add(new SystemTextJsonOutputFormatter(new JsonSerializerOptions(JsonSerializerDefaults.Web)
+  appBuilder.Services
+    .AddDbContext<BooksContext>(ServiceLifetime.Singleton)
+    .AddSingleton<ISeeder, Seeder>()
+    .AddScoped<IBooksCrudRepository, BooksRepository>()
+    .AddScoped<IBooksService, BooksService>()
+    .AddControllers(opts =>
     {
-      ReferenceHandler = ReferenceHandler.IgnoreCycles,
-      DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-    }));
-  });
-  appBuilder.Services.AddEndpointsApiExplorer();
-  appBuilder.Services.AddSwaggerGen();
+      opts.OutputFormatters.RemoveType<SystemTextJsonOutputFormatter>();
+      opts.OutputFormatters.Add(new SystemTextJsonOutputFormatter(new JsonSerializerOptions(JsonSerializerDefaults.Web)
+      {
+        ReferenceHandler = ReferenceHandler.IgnoreCycles,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+      }));
+    });
+
+  appBuilder.Services
+    .AddEndpointsApiExplorer()
+    .AddSwaggerGen()
+    .AddAuthentication()
+      .AddJwtBearer();
 
   appBuilder.Logging.ClearProviders();
   appBuilder.Host.UseNLog();
@@ -43,11 +49,20 @@ try
   if (app.Environment.IsDevelopment())
   {
     app.Services.GetRequiredService<ISeeder>()?.Seed();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+
+    app
+    .UseSwagger()
+    .UseSwaggerUI();
   }
 
-  app.UseAuthorization();
+  app
+    .UseCors(b => b
+      .WithOrigins(APP_URL, CLIENT_URL)
+      .AllowAnyHeader()
+      .AllowAnyMethod()
+      .AllowCredentials()
+    )
+    .UseAuthorization();
 
   app.MapControllers();
 
@@ -56,9 +71,9 @@ try
   app.Run(APP_URL);
 
 }
-catch (Exception exception)
+catch (Exception e)
 {
-  logger.Error(exception, "Stopped program because of exception");
+  logger.Error(e, "Stopped program because of exception");
   throw;
 }
 finally

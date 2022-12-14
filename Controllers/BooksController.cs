@@ -19,7 +19,7 @@ public class BooksController : ControllerBase
   }
 
   [HttpGet]
-  public  async Task<ActionResult<IEnumerable<Book>>> GetBooks() => Ok(await _booksSvc.GetAll());
+  public async Task<ActionResult<IEnumerable<Book>>> GetBooks() => Ok(await _booksSvc.GetAll());
 
   [HttpGet("{id}")]
   public async Task<ActionResult<Book>> GetBook(int id)
@@ -49,7 +49,6 @@ public class BooksController : ControllerBase
   {
     try
     {
-      // var bookAuthor = await _booksSvc.
       var newBook = await _booksSvc.Create(book);
       return CreatedAtAction(nameof(CreateBook), new { id = newBook.Id }, newBook);
     }
@@ -58,6 +57,22 @@ public class BooksController : ControllerBase
       _logger.LogError(e, "Error on CreateBook");
       return BadRequest(e.Message);
     }
+  }
+
+  [HttpPatch]
+  public async Task<ActionResult<Book>> ChangeBook(PatchBookDTO book)
+  {
+    try
+    {
+      var newBook = await _booksSvc.Modify(book);
+       return CreatedAtAction(nameof(ChangeBook), new { id = newBook.Id }, newBook);
+    }
+    catch (Exception e)
+    {
+      _logger.LogError(e, "Error on ChangeBook");
+      return BadRequest(e.Message);
+    }
+
   }
 
   [HttpDelete("{id}")]
