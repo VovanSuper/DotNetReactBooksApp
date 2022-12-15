@@ -15,8 +15,13 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
+            "@books-client/const": ["libs/shared/constants/src/index.ts"],
+            "@books-client/env": ["libs/shared/environment/src/index.ts"],
             "@books-client/hooks": ["libs/hoooks/src/index.ts"],
-            "@books-client/models": ["libs/models/src/index.ts"]
+            "@books-client/models": ["libs/models/src/index.ts"],
+            "@books-client/services": ["libs/services/src/index.ts"],
+            "@books-client/store": ["libs/store/src/index.ts"],
+            "@books-client/ui": ["libs/ui/src/index.ts"]
         }
     },
     "exclude": ["node_modules", "tmp"]
