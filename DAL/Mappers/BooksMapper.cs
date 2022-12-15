@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BooksApi.DAL.Mappers;
 
-public class BooksMapper
+public static class BooksMapper
 {
   public static void Map(ModelBuilder modelBuilder)
   {
