@@ -1,15 +1,20 @@
-import styled from 'styled-components';
-import NxWelcome from './nx-welcome';
+import { Header } from '@books-client/ui';
+import { BrowserRouter } from 'react-router-dom';
+import { AppRouting } from './Routing';
 
-const StyledApp = styled.div`
-  // Your style here
-`;
+import { StyledAppWrapper } from './styled/StyledAppWrapper';
 
 export function App() {
+  const logOut = () => {
+    console.log('Log out');
+  };
+
   return (
-    <StyledApp>
-      <NxWelcome title="books-client" />
-    </StyledApp>
+    <BrowserRouter>
+      <StyledAppWrapper>
+        <AppRouting />
+      </StyledAppWrapper>
+    </BrowserRouter>
   );
 }
 
