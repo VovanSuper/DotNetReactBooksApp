@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 
-import styled from 'styled-components';
 import { ExitToAppRounded as ExitToAppRoundedIcon, PersonRounded as PersonRoundedIcon } from '@mui/icons-material';
 import AdminPanelSettingsRoundedIcon from '@mui/icons-material/AdminPanelSettingsRounded';
 import AppBar from '@mui/material/AppBar';
@@ -10,102 +9,70 @@ import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
+import { IAuthUser } from '@books-client/models';
+import { StyledBlock } from './styled/StyledBlock';
+import { StyledToolbar } from './styled/StyledToolbar';
+import { StyledUser } from './styled/StyledUser';
+
+import { ReactComponent as RealLogo } from './assets/Real-Logo1.svg';
 
 export interface IHeaderProps {
-    logout?: () => void;
-    // user: IAppUser;
+    title?: string;
+    user?: IAuthUser;
+    logOut: () => void;
 }
 
-export const Header: FC<IHeaderProps> = ({ logout, user }) => {
-    const StyledBlock = styled.div`
-        display: flex;
-        align-items: center;
-    `;
-    const StyledLink = styled(Link)`
-        text-decoration: none;
-        color: white;
-        &:hover {
-            color: white;
-        }
-    `;
-    const StyledToolbar = styled(Toolbar)`
-        justify-content: space-between;
-    `;
-    const StyledUser = styled.div`
-        font-size: 24px;
-        margin-right: 30px;
-    `;
-
-    return (
-        <Box sx={{ flexGrow: 1 }}>
-            <AppBar position='fixed' sx={{ bgColor: '#2b2b2b', overflow: 'hidden' }}>
-                <StyledToolbar>
+export const Header: FC<IHeaderProps> = ({ logOut: logout, user, title = 'Books App' }) => (
+    <Box sx={{ flexGrow: 1 }}>
+        <AppBar position='fixed' sx={{ bgColor: '#2b2b2b', overflow: 'hidden' }}>
+            <StyledToolbar>
+                <Link to='/'>
                     <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-                        {/* <MenuIcon /> */}
+                        <RealLogo />
                     </IconButton>
 
-                    <Link to='/'>
-                        <Typography variant='h6' component='span'>
-                            REPEAT beta
-                        </Typography>
-                    </Link>
+                    <Typography variant='h6' component='span'>
+                        {title}
+                    </Typography>
+                </Link>
 
-                    {user.isAuth && (
-                        <StyledBlock>
-                            <StyledUser>Пользователь: {user?.currentUser?.user?.login}</StyledUser>
-                            <Link to='/profile'>
-                                <PersonRoundedIcon
-                                    fontSize='large'
-                                    style={{
-                                        cursor: 'pointer',
-                                        fill: 'white',
-                                        marginRight: '10px',
-                                    }}
-                                />
-                            </Link>
-                            <Link to='/admin'>
-                                <AdminPanelSettingsRoundedIcon
-                                    fontSize='large'
-                                    style={{
-                                        cursor: 'pointer',
-                                        fill: 'white',
-                                        marginRight: '10px',
-                                    }}
-                                />
-                            </Link>
-                            <IconButton
-                                size='large'
-                                aria-label='account of current user'
-                                aria-controls='menu-appbar'
-                                aria-haspopup='true'
-                                color='inherit'
-                                onClick={logout}
-                            >
-                                <ExitToAppRoundedIcon fontSize='large' />
-                            </IconButton>
-                            {/* <Menu
-                                id="menu-appbar"
-                                anchorEl={anchorEl}
-                                anchorOrigin={{
-                                    vertical: "top",
-                                    horizontal: "right",
+                {user?.isAuth && (
+                    <StyledBlock>
+                        <StyledUser>User: {user.name}</StyledUser>
+                        <Link to='/profile'>
+                            <PersonRoundedIcon
+                                fontSize='large'
+                                style={{
+                                    cursor: 'pointer',
+                                    fill: 'white',
+                                    marginRight: '10px',
                                 }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: "top",
-                                    horizontal: "right",
+                            />
+                        </Link>
+                        <Link to='/admin'>
+                            <AdminPanelSettingsRoundedIcon
+                                fontSize='large'
+                                style={{
+                                    cursor: 'pointer',
+                                    fill: 'white',
+                                    marginRight: '10px',
                                 }}
-                                open={Boolean(anchorEl)}
-                                onClose={handleClose}
-                            >
-                                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                                <MenuItem onClick={handleClose}>My account</MenuItem>
-                            </Menu> */}
-                        </StyledBlock>
-                    )}
-                </StyledToolbar>
-            </AppBar>
-            <Toolbar />
-        </Box>
-    );
-};
+                            />
+                        </Link>
+                        <IconButton
+                            size='large'
+                            aria-label='account of current user'
+                            aria-controls='menu-appbar'
+                            aria-haspopup='true'
+                            color='inherit'
+                            onClick={logout}
+                        >
+                            <ExitToAppRoundedIcon fontSize='large' />
+                        </IconButton>
+                    </StyledBlock>
+                )}
+            </StyledToolbar>
+        </AppBar>
+        <Toolbar />
+    </Box>
+);
