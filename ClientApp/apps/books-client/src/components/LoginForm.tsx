@@ -1,50 +1,75 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox } from '@mui/material';
+import { Stack, IconButton, TextField } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { LoadingButton } from '@mui/lab';
+import { useForm } from 'react-hook-form';
+import { LoginRequestDTO } from '@books-client/models';
+import { BooksAppForm, BooksAppSubmit } from '@books-client/ui';
+import { useAppDispatch } from '@books-client/hooks';
+import { loginIn } from '@books-client/store';
 
 export const LoginForm = () => {
   const navigate = useNavigate();
-
+  const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = () => {
-    // handle loign
-    navigate('/books', { replace: true });
+  const {
+    register,
+    handleSubmit,
+    reset,
+
+    formState: { errors, isValid },
+  } = useForm<LoginRequestDTO>({ mode: 'onChange' });
+
+  const changeShowPass = () => setShowPassword(prev => !prev);
+
+  const handleLogin = (loginData: LoginRequestDTO) => {
+    dispatch(loginIn(loginData))
+      .then(_ => navigate('/books', { replace: true }));
   };
 
   return (
-    <>
+    <BooksAppForm onSubmit={handleSubmit(handleLogin)} className="login-form" justify='center' noValidate autoComplete='off'>
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" />
+        <TextField
+          autoComplete={'off'}
+          helperText={errors?.email?.message}
+          error={!!errors?.email}
+          label='Email'
+          type='text'
+          id='email'
+          {...register('email', {
+            required: 'Cannot be Empty',
+            minLength: { value: 2, message: 'Should be no shorter when 2' },
+            maxLength: { value: 50, message: 'Should be no longer when 50' },
+          })}
+        />
 
         <TextField
-          name="password"
-          label="Password"
+          autoComplete={'off'}
+          helperText={errors?.password && errors?.password?.message}
+          error={!!errors?.password}
+          label='Password'
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            ),
+              <IconButton edge="end" onClick={changeShowPass}  >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            )
           }}
+          id='password'
+          {...register('password', {
+            required: 'Cannot be Empty',
+            minLength: { value: 2, message: 'Should be no shorter when 2' },
+            maxLength: { value: 5, message: 'Should be no longer when 5' },
+          })}
         />
-      </Stack>
 
-      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <Checkbox name="remember"  />
-        <Link variant="subtitle2" underline="hover">
-          Forgot password?
-        </Link>
+        <BooksAppSubmit disabled={!isValid}>
+          Login
+        </BooksAppSubmit>
       </Stack>
-
-      <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleLogin}>
-        Login
-      </LoadingButton>
-    </>
+    </BooksAppForm >
   );
 };

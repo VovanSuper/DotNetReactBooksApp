@@ -1,10 +1,10 @@
-import { IAppState, IAuthUser, LoginRequestDTO, USER_FEATURE_KEY } from '@books-client/models';
+import { IAppState, IAuthUser, LoadingStatus, LoginRequestDTO, TLoadingStatus, USER_FEATURE_KEY } from '@books-client/models';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { UserService } from '@books-client/services';
 
 export interface UserState {
-    loadingStatus: 'not loaded' | 'loading' | 'loaded' | 'error';
+    loadingStatus: TLoadingStatus;
     error?: string;
     user?: IAuthUser;
 }
@@ -25,7 +25,7 @@ export const loginIn = createAsyncThunk('user/Login', async (data: LoginRequestD
 });
 
 export const initialUserState: UserState = {
-    loadingStatus: 'not loaded',
+    loadingStatus: LoadingStatus.NOT_LOADED,
     error: undefined,
     user: undefined
 };
@@ -37,15 +37,15 @@ export const userSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(loginIn.pending, (state: UserState) => {
-                state.loadingStatus = 'loading';
+                state.loadingStatus = LoadingStatus.LOADING;
             })
             .addCase(loginIn.fulfilled, (state: UserState, action: PayloadAction<IAuthUser>) => {
-                state.loadingStatus = 'loaded';
+                state.loadingStatus = LoadingStatus.LOADED;
                 state.error = undefined;
-                state.user = action.payload;
+                state.user = { ...action.payload, isAuth: true };
             })
             .addCase(loginIn.rejected, (state: UserState, action) => {
-                state.loadingStatus = 'error';
+                state.loadingStatus = LoadingStatus.LOADED;
                 state.error = action.error.message || 'Login error';
             });
     },

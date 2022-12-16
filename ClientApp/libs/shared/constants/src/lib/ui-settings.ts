@@ -1,0 +1,16 @@
+export const appColors = {
+  smokeWhite: '#fbfbfb',
+  fullWhite: '#fff',
+  fullBlack: '#000',
+  bluePrimary: '#025ea1',
+  blueDarker: '#003274',
+  blueMiddle: '#025EA1',
+  blueLight: '#6CACE4',
+  greyPrimary: '#393939',
+  greyLight: '#E5E5E5',
+  greyMiddle: '#7F7F7F',
+  dark: '#333333',
+  greenDone: '#35BB1F',
+  darkGrey: '#5F6062',
+  redError: '#D32F2F',
+};

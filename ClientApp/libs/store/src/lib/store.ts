@@ -6,6 +6,7 @@ import { environment } from '@books-client/env';
 
 import { getInitState } from './initState';
 import { userReducer, } from './user.slice';
+import { booksReducer } from './books.slice';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -13,7 +14,8 @@ const { production } = environment || { production: false };
 const isDevelopmentEnv = !production;
 
 const rootReducer = combineReducers({
-    user: userReducer
+    user: userReducer,
+    books: booksReducer
 });
 
 const store = configureStore({

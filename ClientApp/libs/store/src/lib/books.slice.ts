@@ -3,8 +3,8 @@ import { BooksService } from '@books-client/services';
 import { createAsyncThunk, createEntityAdapter, createSelector, createSlice, EntityState, PayloadAction, Update } from '@reduxjs/toolkit';
 
 export interface BooksState extends EntityState<IBook> {
-    loadingStatus: TLoadingStatus;
-    error: string | null;
+    loadingStatus?: TLoadingStatus;
+    error?: string | null;
 }
 
 export const booksAdapter = createEntityAdapter<IBook>({
