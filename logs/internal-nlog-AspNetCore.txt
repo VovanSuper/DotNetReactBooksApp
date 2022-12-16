@@ -795,3 +795,5 @@
 2022-12-16 17:16:17.9582 Info Registered target ConsoleTarget(Name=lifetimeConsole)
 2022-12-16 17:16:17.9748 Info Validating config: TargetNames=allfile, lifetimeConsole, ownFile-web, ConfigItems=56, FilePath=D:\Projects\GitHub\DotNetReactBooksApp\bin\Debug\net7.0\NLog.config
 2022-12-16 17:16:18.1233 Info Validating config: TargetNames=allfile, lifetimeConsole, ownFile-web, ConfigItems=56, FilePath=D:\Projects\GitHub\DotNetReactBooksApp\bin\Debug\net7.0\NLog.config
+2022-12-16 17:58:43.2720 Info AppDomain Shutting down. LogFactory closing...
+2022-12-16 17:58:43.2952 Info LogFactory has been closed.
