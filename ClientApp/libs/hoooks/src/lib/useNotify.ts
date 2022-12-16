@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { SnackbarProps } from '@material-ui/core';
+import { SnackbarProps } from '@mui/material';
 
 const iniProps: SnackbarProps = {
     message: '',

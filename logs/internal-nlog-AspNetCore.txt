@@ -788,3 +788,10 @@
 2022-12-15 17:45:35.1886 Info Validating config: TargetNames=allfile, lifetimeConsole, ownFile-web, ConfigItems=56, FilePath=D:\Projects\GitHub\DotNetReactBooksApp\bin\Debug\net7.0\NLog.config
 2022-12-15 23:25:52.7323 Info AppDomain Shutting down. LogFactory closing...
 2022-12-15 23:25:52.7428 Info LogFactory has been closed.
+2022-12-16 17:16:17.9315 Info Message Template Auto Format enabled
+2022-12-16 17:16:17.9315 Info Loading assembly: NLog.Web.AspNetCore
+2022-12-16 17:16:17.9582 Info Registered target FileTarget(Name=allfile)
+2022-12-16 17:16:17.9582 Info Registered target FileTarget(Name=ownFile-web)
+2022-12-16 17:16:17.9582 Info Registered target ConsoleTarget(Name=lifetimeConsole)
+2022-12-16 17:16:17.9748 Info Validating config: TargetNames=allfile, lifetimeConsole, ownFile-web, ConfigItems=56, FilePath=D:\Projects\GitHub\DotNetReactBooksApp\bin\Debug\net7.0\NLog.config
+2022-12-16 17:16:18.1233 Info Validating config: TargetNames=allfile, lifetimeConsole, ownFile-web, ConfigItems=56, FilePath=D:\Projects\GitHub\DotNetReactBooksApp\bin\Debug\net7.0\NLog.config

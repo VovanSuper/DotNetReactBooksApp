@@ -1,17 +1,35 @@
-import type { FC } from 'react';
+import type { FC, ReactElement } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 
+import { useAppDispatch, useAppSelector } from '@books-client/hooks';
 import { BooksLayout } from '@books-client/ui';
 import { BooksPage } from '../pages/BooksPage';
 import { BookPage } from '../pages/BookPage';
-import { LoginPage } from '../pages/LoginPage';
+import { LoginPage } from '../pages/LoginPage/LoginPage';
 import Page404 from '../pages/Page404';
+
+const PrivateGuard: FC<{ children: ReactElement; }> = ({ children }) => {
+  const { user } = useAppSelector((state) => state.user);
+  const { isAuth } = user || { isAuth: false };
+  return isAuth ? children : <Navigate to='/login' />;
+};
+
+const AnonymousGuard: FC<{ children: ReactElement; }> = ({ children }) => {
+  const { user } = useAppSelector((state) => state.user);
+  const { isAuth } = user || { isAuth: false };
+  return isAuth ? <Navigate to='/' /> : children;
+};
 
 export const AppRouting: FC = () => {
   const routes = useRoutes([
     {
       path: '/books',
-      element: <BooksLayout />,
+      element: (
+        <PrivateGuard>
+          <BooksLayout />
+        </PrivateGuard>
+      ),
+      // element: <BooksLayout />,
       children: [
         { element: <Navigate to="/books/all" />, index: true },
         { path: 'all', element: <BooksPage /> },
@@ -20,9 +38,14 @@ export const AppRouting: FC = () => {
     },
     {
       path: 'login',
-      element: <LoginPage />,
+      element: (
+        <AnonymousGuard>
+          <LoginPage />
+        </AnonymousGuard>
+      ),
     },
     { path: '404', element: <Page404 /> },
+    { path: '/', element: <Navigate to="/books/all" /> },
     {
       path: '*',
       element: <Navigate to="/404" replace />,

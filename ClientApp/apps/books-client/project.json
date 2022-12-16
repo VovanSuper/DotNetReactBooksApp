@@ -18,6 +18,7 @@
         "tsConfig": "apps/books-client/tsconfig.app.json",
         "assets": [
           "apps/books-client/src/favicon.ico",
+          "apps/books-client/src/main.css",
           "apps/books-client/src/assets"
         ],
         "styles": [],
@@ -52,7 +53,8 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "books-client:build",
-        "hmr": true
+        "hmr": true,
+        "port": 8080
       },
       "configurations": {
         "development": {

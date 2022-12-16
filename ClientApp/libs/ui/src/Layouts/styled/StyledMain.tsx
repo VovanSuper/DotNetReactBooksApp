@@ -1,5 +1,5 @@
 import { APP_BAR_MOBILE, APP_BAR_DESKTOP } from '@books-client/const';
-import styled from 'styled-components';
+import { styled } from '@mui/material/styles';
 
 export const StyledMain = styled('div')(({ theme }) => ({
   flexGrow: 1,

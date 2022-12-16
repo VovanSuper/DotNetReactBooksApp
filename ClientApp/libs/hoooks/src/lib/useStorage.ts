@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { isValue } from '@repeat/constants';
+import { isValue } from '@books-client/const';
 
 const useStorage = <T>(key: string, storage: Storage = window.localStorage, defaultValue?: T) => {
     const [value, setValue] = useState<T>(() => {

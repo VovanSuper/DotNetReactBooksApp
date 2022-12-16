@@ -1,4 +1,6 @@
+import { store } from '@books-client/store';
 import { Header } from '@books-client/ui';
+import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { AppRouting } from './Routing';
 
@@ -10,11 +12,13 @@ export function App() {
   };
 
   return (
-    <BrowserRouter>
-      <StyledAppWrapper>
-        <AppRouting />
-      </StyledAppWrapper>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <StyledAppWrapper>
+          <AppRouting />
+        </StyledAppWrapper>
+      </BrowserRouter>
+    </Provider>
   );
 }
 

@@ -5,7 +5,7 @@ import { StyledMain } from '../styled/StyledMain';
 import { StyledRoot } from '../styled/StyledRoot';
 
 export const BooksLayout: FC = () => {
-  const user = { name: '', email: '', isAuth: false };
+  const user = { id: 1, name: '', email: '', isAuth: false };
   const logOut = () => void 0 ;
 
   
