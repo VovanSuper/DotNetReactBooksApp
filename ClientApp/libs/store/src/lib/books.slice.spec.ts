@@ -1,3 +1,4 @@
+import { IBook } from '@books-client/models';
 import { getBooks, booksAdapter, booksReducer } from './books.slice';
 
 describe('books reducer', () => {
@@ -10,8 +11,8 @@ describe('books reducer', () => {
         expect(booksReducer(undefined, { type: '' })).toEqual(expected);
     });
 
-    it('should handle fetchBookss', () => {
-        let state = booksReducer(undefined, getBooks.pending(null, null));
+    it('should handle fetchBooks', () => {
+        let state = booksReducer(undefined, getBooks.pending("loading", void 0));
 
         expect(state).toEqual(
             expect.objectContaining({
@@ -21,7 +22,7 @@ describe('books reducer', () => {
             })
         );
 
-        state = booksReducer(state, getBooks.fulfilled([{ id: 1 }], null, null));
+        state = booksReducer(state, getBooks.fulfilled([{ id: 1, author: { id: 1, name: 'VovanSuppa' }, authorId: 1, genre: { genreName: 'G1', id: 1 }, year: 2023, name: "The Vovan Book 1" } as IBook], 'loaded', void 0));
 
         expect(state).toEqual(
             expect.objectContaining({
@@ -31,12 +32,12 @@ describe('books reducer', () => {
             })
         );
 
-        state = booksReducer(state, getBooks.rejected(new Error('Uh oh'), null, null));
+        state = booksReducer(state, getBooks.rejected(new Error('Handle books Loading Error'), '1', void 0));
 
         expect(state).toEqual(
             expect.objectContaining({
                 loadingStatus: 'error',
-                error: 'Uh oh',
+                error: 'Handle books Loading Error',
                 entities: { 1: { id: 1 } },
             })
         );
