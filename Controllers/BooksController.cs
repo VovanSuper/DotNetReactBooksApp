@@ -94,7 +94,7 @@ public class BooksController : ControllerBase
     {
       var book = await _booksSvc.DeleteById(id);
 
-      return NoContent();
+      return Ok(book);
     }
     catch (Exception e)
     {

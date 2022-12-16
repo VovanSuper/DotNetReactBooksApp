@@ -1,17 +1,15 @@
-import { IBook } from '@books-client/models';
+import { BOOKS_FEATURE_KEY, IAppState, IBook, TLoadingStatus, LoadingStatus } from '@books-client/models';
 import { BooksService } from '@books-client/services';
-import { createAsyncThunk, createEntityAdapter, createSelector, createSlice, EntityState, PayloadAction } from '@reduxjs/toolkit';
-
-export const BOOKS_FEATURE_KEY = 'books';
+import { createAsyncThunk, createEntityAdapter, createSelector, createSlice, EntityState, PayloadAction, Update } from '@reduxjs/toolkit';
 
 export interface BooksState extends EntityState<IBook> {
-    loadingStatus: 'not loaded' | 'loading' | 'loaded' | 'error';
+    loadingStatus: TLoadingStatus;
     error: string | null;
 }
 
 export const booksAdapter = createEntityAdapter<IBook>({
-    selectId: books => books.id,
-    sortComparer: (b1, b2) => b1.name.localeCompare(b2.name)
+    selectId: book => book.id,
+    sortComparer: (b1, b2) => b1.name.localeCompare(b2.name),
 });
 
 /**
@@ -53,7 +51,7 @@ export const getBook = createAsyncThunk('book/getSingle', async ({ id }: { id: n
 
 export const deleteBook = createAsyncThunk('books/deleteSingle', async ({ id }: { id: number; }, { fulfillWithValue, rejectWithValue }) => {
     try {
-        const book = await BooksService.getBook({ id });
+        const book = await BooksService.deleteBook({ id });
         return fulfillWithValue(book);
     } catch (e) {
         console.error(e);
@@ -72,7 +70,7 @@ export const patchBook = createAsyncThunk('books/patchSingle', async ({ id, book
 });
 
 export const initialBooksState: BooksState = booksAdapter.getInitialState({
-    loadingStatus: 'not loaded',
+    loadingStatus: LoadingStatus.NOT_LOADED,
     error: null,
 });
 
@@ -89,22 +87,57 @@ export const booksSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getBooks.pending, (state: BooksState) => {
-                state.loadingStatus = 'loading';
+                state.loadingStatus = LoadingStatus.LOADING;
             })
             .addCase(getBooks.fulfilled, (state: BooksState, action: PayloadAction<IBook[]>) => {
                 booksAdapter.setAll(state, action.payload);
-                state.loadingStatus = 'loaded';
+                state.loadingStatus = LoadingStatus.LOADED;
             })
             .addCase(getBooks.rejected, (state: BooksState, action) => {
-                state.loadingStatus = 'error';
-                state.error = action.error.message;
-            });
+                state.loadingStatus = LoadingStatus.ERROR;
+                state.error = action.error.message ?? 'error loading books';
+            })
+
+            .addCase(getBook.pending, (state: BooksState) => {
+                state.loadingStatus = LoadingStatus.LOADING;
+            })
+            .addCase(getBook.fulfilled, (state: BooksState, action: PayloadAction<IBook>) => {
+                booksAdapter.setOne(state, action.payload);
+                state.loadingStatus = LoadingStatus.LOADED;
+            })
+            .addCase(getBook.rejected, (state: BooksState, action) => {
+                state.loadingStatus = LoadingStatus.ERROR;
+                state.error = action.error.message ?? `error loading book: ${action.payload}`;
+            })
+
+            .addCase(deleteBook.pending, (state: BooksState) => {
+                state.loadingStatus = LoadingStatus.LOADING;
+            })
+            .addCase(deleteBook.fulfilled, (state: BooksState, action: PayloadAction<IBook>) => {
+                booksAdapter.removeOne(state, action.payload.id);
+                state.loadingStatus = LoadingStatus.LOADED;
+            })
+            .addCase(deleteBook.rejected, (state: BooksState, action) => {
+                state.loadingStatus = LoadingStatus.ERROR;
+                state.error = action.error.message ?? `error deleting the book ${action.payload}`;
+            })
+
+            .addCase(patchBook.pending, (state: BooksState) => {
+                state.loadingStatus = LoadingStatus.LOADING;
+            })
+            .addCase(patchBook.fulfilled, (state: BooksState, action: PayloadAction<IBook>) => {
+                const update = { changes: action.payload as Partial<IBook>, id: action.payload.id } as Update<IBook>;
+                booksAdapter.updateOne(state, update);
+                state.loadingStatus = LoadingStatus.LOADED;
+            })
+            .addCase(patchBook.rejected, (state: BooksState, action) => {
+                state.loadingStatus = LoadingStatus.ERROR;
+                state.error = action.error.message ?? `error updating the book ${action.payload}`;
+            })
+
+            ;
     },
 });
-
-/*
- * Export reducer for store configuration.
- */
 export const booksReducer = booksSlice.reducer;
 
 /*
@@ -143,7 +176,7 @@ export const booksActions = booksSlice.actions;
  */
 const { selectAll, selectEntities } = booksAdapter.getSelectors();
 
-export const getBooksState = (rootState: unknown): BooksState => rootState[BOOKS_FEATURE_KEY];
+export const getBooksState = (rootState: any): BooksState => rootState[BOOKS_FEATURE_KEY];
 
 export const selectAllBooks = createSelector(getBooksState, selectAll);
 

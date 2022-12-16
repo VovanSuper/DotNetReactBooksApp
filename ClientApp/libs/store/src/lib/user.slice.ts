@@ -1,10 +1,7 @@
-import { IAppState, IAuthUser, LoginRequestDTO } from '@books-client/models';
-import { createAsyncThunk, createEntityAdapter, createSelector, createSlice, EntityAdapter, EntityState, PayloadAction } from '@reduxjs/toolkit';
-import { AppDispatch } from './store';
+import { IAppState, IAuthUser, LoginRequestDTO, USER_FEATURE_KEY } from '@books-client/models';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { UserService } from '@books-client/services';
-
-export const USER_FEATURE_KEY = 'user';
 
 export interface UserState {
     loadingStatus: 'not loaded' | 'loading' | 'loaded' | 'error';
