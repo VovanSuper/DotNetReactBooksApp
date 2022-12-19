@@ -1,9 +1,9 @@
-import type { FC, ReactElement } from 'react';
+import { FC, ReactElement } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 
 import { useAppSelector } from '@books-client/hooks';
 import { BooksLayout } from '@books-client/ui';
-import { BookPage } from '../pages/BookPage';
+import { EditBookItem } from '../pages/BooksPage/BooksItems/EditBookItem';
 import { BooksPage } from '../pages/BooksPage/BooksPage';
 import { LoginPage } from '../pages/LoginPage/LoginPage';
 import Page404 from '../pages/Page404';
@@ -15,9 +15,10 @@ const PrivateGuard: FC<{ children: ReactElement }> = ({ children }) => {
 };
 
 const AnonymousGuard: FC<{ children: ReactElement }> = ({ children }) => {
-    const { user } = useAppSelector((state) => state.user);
-    const { isAuth } = user || { isAuth: false };
-    return isAuth ? <Navigate to='/' /> : children;
+    const userSlice = useAppSelector((state) => state.user);
+    console.log({ userSlice });
+
+    return userSlice?.user?.isAuth ? <Navigate to='/' /> : children;
 };
 
 export const AppRouting: FC = () => {
@@ -32,7 +33,7 @@ export const AppRouting: FC = () => {
             children: [
                 { element: <Navigate to='/books/all' />, index: true },
                 { path: 'all', element: <BooksPage /> },
-                { path: ':id', element: <BookPage /> },
+                { path: ':id', element: <EditBookItem /> },
             ],
         },
         {

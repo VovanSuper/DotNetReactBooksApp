@@ -108,7 +108,7 @@ export const booksSlice = createSlice({
                 state.loadingStatus = LoadingStatus.LOADING;
             })
             .addCase(getBook.fulfilled, (state: BooksState, action: PayloadAction<IBook>) => {
-                booksAdapter.setOne(state, action.payload);
+                // booksAdapter.setOne(state, action.payload);
                 state.error = undefined;
                 state.loadingStatus = LoadingStatus.LOADED;
             })
@@ -186,5 +186,13 @@ const { selectAll, selectEntities, selectById } = booksAdapter.getSelectors();
 export const getBooksState = (rootState: any): BooksState => rootState[BOOKS_FEATURE_KEY];
 
 export const selectAllBooks = createSelector(getBooksState, selectAll);
+
+// export const createSelectBook = (id: number) => createSelector(selectAllBooks, (books) => books.at(id));
+// export const selectBook = createSelector([selectAllBooks, (books: IBook[], id: number) => id], (books, id) => {
+//     const book = books.at(id);
+//     return book;
+// });
+
+export const selectBook = createSelector([selectAllBooks, (state, id) => id], (books, id) => books.at(id));
 
 export const selectBooksEntities = createSelector(getBooksState, selectEntities);

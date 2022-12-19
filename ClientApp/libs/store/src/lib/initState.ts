@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { LOCAL_STORAGE_APP_REDUX_STATE_KEY } from '@books-client/const';
-import { IAppState, LoadingStatus } from '@books-client/models';
+import { IAppState, LoadingStatus, USER_FEATURE_KEY } from '@books-client/models';
 
 const initState: IAppState = {
     books: {
@@ -12,7 +11,13 @@ const initState: IAppState = {
 };
 
 export const getInitState = (): IAppState => {
-    const stateFromLS = window.localStorage.getItem(LOCAL_STORAGE_APP_REDUX_STATE_KEY);
-    const state = stateFromLS ? (JSON.parse(stateFromLS) as IAppState) : initState;
-    return state;
+    const userStateFromLS = window.localStorage.getItem(USER_FEATURE_KEY);
+    if (userStateFromLS) {
+        const userObj = JSON.parse(userStateFromLS);
+        if (userObj) {
+            const userState = { user: { user: { ...userObj, isAuth: true } } };
+            return userState as IAppState;
+        }
+    }
+    return initState;
 };

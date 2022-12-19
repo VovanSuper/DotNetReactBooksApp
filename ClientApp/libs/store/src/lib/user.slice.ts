@@ -11,13 +11,12 @@ export interface UserState {
 
 export const loginIn = createAsyncThunk('user/Login', async (data: LoginRequestDTO, { fulfillWithValue, rejectWithValue }) => {
     try {
-        const response = await UserService.signIn(data);
-        const { email, id, token } = response;
+        const userData = await UserService.signIn(data);
+        const { id, name, email, token } = userData;
         if (token) {
-            localStorage.setItem('accessToken', token);
-            localStorage.setItem('authUser', JSON.stringify({ id, email, token }));
+            localStorage.setItem(USER_FEATURE_KEY, JSON.stringify({ id, email, token }));
         }
-        return fulfillWithValue(response);
+        return fulfillWithValue(userData);
     } catch (error: any) {
         console.error(error);
         return rejectWithValue(error);
@@ -27,7 +26,7 @@ export const loginIn = createAsyncThunk('user/Login', async (data: LoginRequestD
 export const initialUserState: UserState = {
     loadingStatus: LoadingStatus.NOT_LOADED,
     error: undefined,
-    user: undefined
+    user: undefined,
 };
 
 export const userSlice = createSlice({

@@ -18,6 +18,7 @@ public class BooksRepository : IBooksCrudRepository
   {
     Id = b.Id,
     Name = b.Name,
+    Year = b.Year,
     Genre = new Genre { Id = b.GenreId, GenreName = b.Genre.GenreName },
     Author = new Author { Id = b.AuthorId, Name = b.Author.Name }
   });

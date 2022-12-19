@@ -1,11 +1,11 @@
 import { useAppDispatch, useAppSelector } from '@books-client/hooks';
 import { booksActions, deleteBook, selectAllBooks } from '@books-client/store';
 import { BookListItem } from '@books-client/ui';
-import { Card, CardHeader } from '@mui/material';
+import { Card, CardHeader, CardProps } from '@mui/material';
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export interface IBookCardProps {
+export interface IBookCardProps extends CardProps {
     title: string;
     subTitle: string;
 }

@@ -6,6 +6,7 @@ import { TLoadingStatus } from './loading-status';
 
 export const BOOKS_FEATURE_KEY = 'books';
 export const USER_FEATURE_KEY = 'user';
+export const TOKEN_STORAGE_KEY = 'accessToken';
 
 export interface IAppState {
     user: {

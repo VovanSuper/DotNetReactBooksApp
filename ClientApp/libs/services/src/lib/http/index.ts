@@ -1,7 +1,8 @@
-import axios from 'axios';
 import type { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 
 import { environment } from '@books-client/env';
+import { USER_FEATURE_KEY } from '@books-client/models';
 
 export { apiEndpoint } from './endpoints';
 
@@ -15,12 +16,12 @@ const apiConfig: AxiosRequestConfig = {
 
 export const $api = axios.create(apiConfig);
 
-$api.interceptors.request.use(
-    (config) => {
-        const accessToken = localStorage.getItem('accessToken');
-        if (accessToken && config.headers) {
-            config.headers['Authorization'] = `Bearer ${accessToken}`;
-        }
-        return config;
+$api.interceptors.request.use((config) => {
+    const user = localStorage.getItem(USER_FEATURE_KEY);
+
+    if (user && config.headers) {
+        const { token } = JSON.parse(user);
+        if (token) config.headers['Authorization'] = `Bearer ${token}`;
     }
-);
+    return config;
+});

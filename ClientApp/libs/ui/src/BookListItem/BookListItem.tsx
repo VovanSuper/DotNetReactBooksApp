@@ -1,8 +1,10 @@
-import { appColors } from '@books-client/const';
-import { IBook } from '@books-client/models';
 import { DeleteOutline, EditOutlined, MoreVert } from '@mui/icons-material';
 import { Checkbox, Divider, FormControlLabel, IconButton, MenuItem, Popover, Stack } from '@mui/material';
-import { FC, SyntheticEvent, useState } from 'react';
+import type { FC, SyntheticEvent } from 'react';
+import { useState } from 'react';
+
+import { appColors } from '@books-client/const';
+import type { IBook } from '@books-client/models';
 
 export interface IBookItemProps {
     book: IBook;
