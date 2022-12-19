@@ -1,86 +1,82 @@
 {
-  "name": "books-client",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/books-client/src",
-  "projectType": "application",
-  "targets": {
-    "build": {
-      "executor": "@nrwl/webpack:webpack",
-      "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
-      "options": {
-        "compiler": "babel",
-        "outputPath": "dist/apps/books-client",
-        "index": "apps/books-client/src/index.html",
-        "baseHref": "/",
-        "main": "apps/books-client/src/main.tsx",
-        "polyfills": "apps/books-client/src/polyfills.ts",
-        "tsConfig": "apps/books-client/tsconfig.app.json",
-        "assets": [
-          "apps/books-client/src/favicon.ico",
-          "apps/books-client/src/main.css",
-          "apps/books-client/src/assets"
-        ],
-        "styles": [],
-        "scripts": [],
-        "webpackConfig": "@nrwl/react/plugins/webpack"
-      },
-      "configurations": {
-        "development": {
-          "extractLicenses": false,
-          "optimization": false,
-          "sourceMap": true,
-          "vendorChunk": true
-        },
-        "production": {
-          "fileReplacements": [
-            {
-              "replace": "apps/books-client/src/environments/environment.ts",
-              "with": "apps/books-client/src/environments/environment.prod.ts"
+    "name": "books-client",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "ClientApp/apps/books-client/src",
+    "projectType": "application",
+    "targets": {
+        "build": {
+            "executor": "@nrwl/webpack:webpack",
+            "outputs": ["{options.outputPath}"],
+            "defaultConfiguration": "production",
+            "options": {
+                "compiler": "babel",
+                "outputPath": "dist/apps/books-client",
+                "index": "ClientApp/apps/books-client/src/index.html",
+                "baseHref": "/",
+                "main": "ClientApp/apps/books-client/src/main.tsx",
+                "polyfills": "ClientApp/apps/books-client/src/polyfills.ts",
+                "tsConfig": "ClientApp/apps/books-client/tsconfig.app.json",
+                "assets": ["ClientApp/apps/books-client/src/favicon.ico", "ClientApp/apps/books-client/src/main.css", "ClientApp/apps/books-client/src/assets"],
+                "styles": [],
+                "scripts": [],
+                "webpackConfig": "@nrwl/react/plugins/webpack"
+            },
+            "configurations": {
+                "development": {
+                    "extractLicenses": false,
+                    "optimization": false,
+                    "sourceMap": true,
+                    "vendorChunk": true
+                },
+                "production": {
+                    "fileReplacements": [
+                        {
+                            "replace": "ClientApp/libs/shared/environment/src/lib/environment.ts",
+                            "with": "ClientApp/libs/shared/environment/src/lib/environment.prod.ts"
+                        }
+                    ],
+                    "optimization": true,
+                    "outputHashing": "all",
+                    "sourceMap": false,
+                    "namedChunks": false,
+                    "extractLicenses": true,
+                    "vendorChunk": false
+                }
             }
-          ],
-          "optimization": true,
-          "outputHashing": "all",
-          "sourceMap": false,
-          "namedChunks": false,
-          "extractLicenses": true,
-          "vendorChunk": false
-        }
-      }
-    },
-    "serve": {
-      "executor": "@nrwl/webpack:dev-server",
-      "defaultConfiguration": "development",
-      "options": {
-        "buildTarget": "books-client:build",
-        "hmr": true,
-        "port": 8080
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "books-client:build:development"
         },
-        "production": {
-          "buildTarget": "books-client:build:production",
-          "hmr": false
+        "serve": {
+            "executor": "@nrwl/webpack:dev-server",
+            "defaultConfiguration": "development",
+            "options": {
+                "buildTarget": "books-client:build",
+                "hmr": true,
+                "port": 8080
+            },
+            "configurations": {
+                "development": {
+                    "buildTarget": "books-client:build:development"
+                },
+                "production": {
+                    "buildTarget": "books-client:build:production",
+                    "hmr": false
+                }
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["ClientApp/apps/books-client/**/*.{ts,tsx,js,jsx}"]
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+            "options": {
+                "jestConfig": "ClientApp/apps/books-client/jest.config.ts",
+                "passWithNoTests": true
+            }
         }
-      }
     },
-    "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["apps/books-client/**/*.{ts,tsx,js,jsx}"]
-      }
-    },
-    "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-      "options": {
-        "jestConfig": "apps/books-client/jest.config.ts",
-        "passWithNoTests": true
-      }
-    }
-  },
-  "tags": []
+    "tags": []
 }

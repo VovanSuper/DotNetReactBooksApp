@@ -1,6 +1,6 @@
 {
     "name": "hoooks",
-    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "libs/hoooks/src",
     "projectType": "library",
     "tags": ["libs", "hooks"],

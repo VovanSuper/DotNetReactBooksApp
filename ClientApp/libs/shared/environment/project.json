@@ -1,6 +1,6 @@
 {
     "name": "shared-environment",
-    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "libs/shared/environment/src",
     "projectType": "library",
     "targets": {

@@ -1,14 +1,15 @@
-import { BOOKS_FEATURE_KEY, IAppState, IBook, TLoadingStatus, LoadingStatus } from '@books-client/models';
+import { BOOKS_FEATURE_KEY, IBook, LoadingStatus, TLoadingStatus } from '@books-client/models';
 import { BooksService } from '@books-client/services';
 import { createAsyncThunk, createEntityAdapter, createSelector, createSlice, EntityState, PayloadAction, Update } from '@reduxjs/toolkit';
 
 export interface BooksState extends EntityState<IBook> {
     loadingStatus?: TLoadingStatus;
     error?: string | null;
+    selectedBooks: number[] | null;
 }
 
 export const booksAdapter = createEntityAdapter<IBook>({
-    selectId: book => book.id,
+    selectId: (book) => book.id,
     sortComparer: (b1, b2) => b1.name.localeCompare(b2.name),
 });
 
@@ -39,7 +40,7 @@ export const getBooks = createAsyncThunk('books/get', async (_, { fulfillWithVal
     }
 });
 
-export const getBook = createAsyncThunk('book/getSingle', async ({ id }: { id: number; }, { fulfillWithValue, rejectWithValue }) => {
+export const getBook = createAsyncThunk('book/getSingle', async ({ id }: { id: number }, { fulfillWithValue, rejectWithValue }) => {
     try {
         const book = await BooksService.getBook({ id });
         return fulfillWithValue(book);
@@ -49,7 +50,7 @@ export const getBook = createAsyncThunk('book/getSingle', async ({ id }: { id: n
     }
 });
 
-export const deleteBook = createAsyncThunk('books/deleteSingle', async ({ id }: { id: number; }, { fulfillWithValue, rejectWithValue }) => {
+export const deleteBook = createAsyncThunk('books/deleteSingle', async ({ id }: { id: number }, { fulfillWithValue, rejectWithValue }) => {
     try {
         const book = await BooksService.deleteBook({ id });
         return fulfillWithValue(book);
@@ -57,9 +58,8 @@ export const deleteBook = createAsyncThunk('books/deleteSingle', async ({ id }: 
         console.error(e);
         return rejectWithValue(e);
     }
-
 });
-export const patchBook = createAsyncThunk('books/patchSingle', async ({ id, book }: { id: number; book: Partial<IBook>; }, { fulfillWithValue, rejectWithValue }) => {
+export const patchBook = createAsyncThunk('books/patchSingle', async ({ id, book }: { id: number; book: Partial<IBook> }, { fulfillWithValue, rejectWithValue }) => {
     try {
         const result = await BooksService.updateBook({ id }, book);
         return fulfillWithValue(result);
@@ -72,6 +72,7 @@ export const patchBook = createAsyncThunk('books/patchSingle', async ({ id, book
 export const initialBooksState: BooksState = booksAdapter.getInitialState({
     loadingStatus: LoadingStatus.NOT_LOADED,
     error: null,
+    selectedBooks: null,
 });
 
 export const booksSlice = createSlice({
@@ -82,7 +83,11 @@ export const booksSlice = createSlice({
         setOne: booksAdapter.setOne,
         add: booksAdapter.addOne,
         remove: booksAdapter.removeOne,
-        update: booksAdapter.updateOne
+        update: booksAdapter.updateOne,
+        selectBooks: (state, { payload }: PayloadAction<number[]>) => ({
+            ...state,
+            selectedBooks: payload,
+        }),
     },
     extraReducers: (builder) => {
         builder
@@ -91,6 +96,7 @@ export const booksSlice = createSlice({
             })
             .addCase(getBooks.fulfilled, (state: BooksState, action: PayloadAction<IBook[]>) => {
                 booksAdapter.setAll(state, action.payload);
+                state.error = undefined;
                 state.loadingStatus = LoadingStatus.LOADED;
             })
             .addCase(getBooks.rejected, (state: BooksState, action) => {
@@ -103,6 +109,7 @@ export const booksSlice = createSlice({
             })
             .addCase(getBook.fulfilled, (state: BooksState, action: PayloadAction<IBook>) => {
                 booksAdapter.setOne(state, action.payload);
+                state.error = undefined;
                 state.loadingStatus = LoadingStatus.LOADED;
             })
             .addCase(getBook.rejected, (state: BooksState, action) => {
@@ -115,6 +122,7 @@ export const booksSlice = createSlice({
             })
             .addCase(deleteBook.fulfilled, (state: BooksState, action: PayloadAction<IBook>) => {
                 booksAdapter.removeOne(state, action.payload.id);
+                state.error = undefined;
                 state.loadingStatus = LoadingStatus.LOADED;
             })
             .addCase(deleteBook.rejected, (state: BooksState, action) => {
@@ -128,14 +136,13 @@ export const booksSlice = createSlice({
             .addCase(patchBook.fulfilled, (state: BooksState, action: PayloadAction<IBook>) => {
                 const update = { changes: action.payload as Partial<IBook>, id: action.payload.id } as Update<IBook>;
                 booksAdapter.updateOne(state, update);
+                state.error = undefined;
                 state.loadingStatus = LoadingStatus.LOADED;
             })
             .addCase(patchBook.rejected, (state: BooksState, action) => {
                 state.loadingStatus = LoadingStatus.ERROR;
                 state.error = action.error.message ?? `error updating the book ${action.payload}`;
-            })
-
-            ;
+            });
     },
 });
 export const booksReducer = booksSlice.reducer;
@@ -174,7 +181,7 @@ export const booksActions = booksSlice.actions;
  *
  * See: https://react-redux.js.org/next/api/hooks#useselector
  */
-const { selectAll, selectEntities } = booksAdapter.getSelectors();
+const { selectAll, selectEntities, selectById } = booksAdapter.getSelectors();
 
 export const getBooksState = (rootState: any): BooksState => rootState[BOOKS_FEATURE_KEY];
 

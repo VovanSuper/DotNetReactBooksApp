@@ -20,7 +20,7 @@ public class BooksController : ControllerBase
     _logger = logger;
   }
 
-  [AllowAnonymous]
+  // [AllowAnonymous]
   [HttpGet]
   public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
   {
@@ -87,13 +87,12 @@ public class BooksController : ControllerBase
 
   }
 
-  [HttpDelete("{id}")]
-  public async Task<IActionResult> DeleteBook(int id)
+  [HttpDelete]
+  public async Task<IActionResult> DeleteBook([FromBody] DeleteBookDTO deleteBookId)
   {
     try
     {
-      var book = await _booksSvc.DeleteById(id);
-
+      var book = await _booksSvc.DeleteById(deleteBookId.Id);
       return Ok(book);
     }
     catch (Exception e)

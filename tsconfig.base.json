@@ -1,19 +1,19 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "rootDir": ".",
+        "rootDir": "./",
         "sourceMap": true,
         "declaration": false,
         "moduleResolution": "node",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "importHelpers": true,
-        "target": "es2015",
+        "target": "es2017",
         "module": "esnext",
-        "lib": ["es2017", "dom"],
+        "lib": ["ES2022", "DOM"],
         "skipLibCheck": true,
         "skipDefaultLibCheck": true,
-        "baseUrl": ".",
+        "baseUrl": "./ClientApp",
         "paths": {
             "@books-client/const": ["libs/shared/constants/src/index.ts"],
             "@books-client/env": ["libs/shared/environment/src/index.ts"],

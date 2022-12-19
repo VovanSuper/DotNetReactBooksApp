@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.HttpLogging;
 
 var APP_URL = "http://localhost:8085";
 var CLIENT_URL = "http://localhost:8080"
@@ -23,43 +24,61 @@ logger.Debug("Init App...");
 
 try
 {
-    var appBuilder = WebApplication.CreateBuilder(args);
+  var appBuilder = WebApplication.CreateBuilder(args);
 
-    appBuilder.Services
-      .AddDbContext<BooksContext>(ServiceLifetime.Singleton)
-      .AddSingleton<IAppSettings, AppSettings>()
-      .AddSingleton<AuthUtils>()
-      .AddSingleton<ISeeder, Seeder>()
-      .AddScoped<IBooksCrudRepository, BooksRepository>()
-      .AddScoped<IUsersCrudRepository, UsersRepository>()
-      .AddScoped<IBooksService, BooksService>()
-      .AddScoped<IAuthService, SimpleAuthService>()
-      .AddControllers(opts =>
+  appBuilder.Services
+    .AddHttpLogging(logging =>
+    {
+      logging.LoggingFields = HttpLoggingFields.All;
+      logging.RequestHeaders.Add("sec-ch-ua");
+      logging.ResponseHeaders.Add("X-MyResponseHeader");
+      logging.MediaTypeOptions.AddText("application/javascript");
+      logging.RequestBodyLogLimit = 4096;
+      logging.ResponseBodyLogLimit = 4096;
+    })
+    .AddDbContext<BooksContext>(ServiceLifetime.Singleton)
+    .AddSingleton<IAppSettings, AppSettings>()
+    .AddSingleton<AuthUtils>()
+    .AddSingleton<ISeeder, Seeder>()
+    .AddScoped<IBooksCrudRepository, BooksRepository>()
+    .AddScoped<IUsersCrudRepository, UsersRepository>()
+    .AddScoped<IBooksService, BooksService>()
+    .AddScoped<IAuthService, SimpleAuthService>()
+    .AddCors(corsOpts =>
+    {
+      corsOpts.AddDefaultPolicy(builder => builder
+          .WithOrigins(APP_URL, CLIENT_URL)
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+      );
+    })
+    .AddControllers(opts =>
+    {
+      opts.OutputFormatters.RemoveType<SystemTextJsonOutputFormatter>();
+      opts.OutputFormatters.Add(new SystemTextJsonOutputFormatter(new JsonSerializerOptions(JsonSerializerDefaults.Web)
       {
-          opts.OutputFormatters.RemoveType<SystemTextJsonOutputFormatter>();
-          opts.OutputFormatters.Add(new SystemTextJsonOutputFormatter(new JsonSerializerOptions(JsonSerializerDefaults.Web)
-          {
-              ReferenceHandler = ReferenceHandler.IgnoreCycles,
-              DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-          }));
+        ReferenceHandler = ReferenceHandler.IgnoreCycles,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+      }));
+    });
+
+  appBuilder.Services
+    .AddEndpointsApiExplorer()
+    .AddSwaggerGen(opt =>
+    {
+      opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Simple Books Api", Version = "v1" });
+      opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+      {
+        In = ParameterLocation.Header,
+        Description = "Please enter token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "bearer"
       });
-
-    appBuilder.Services
-      .AddEndpointsApiExplorer()
-      .AddSwaggerGen(opt =>
-      {
-          opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Simple Books Api", Version = "v1" });
-          opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-          {
-              In = ParameterLocation.Header,
-              Description = "Please enter token",
-              Name = "Authorization",
-              Type = SecuritySchemeType.Http,
-              BearerFormat = "JWT",
-              Scheme = "bearer"
-          });
-          opt.AddSecurityRequirement(new OpenApiSecurityRequirement
-          {
+      opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
             {
                 new OpenApiSecurityScheme
                 {
@@ -71,58 +90,59 @@ try
                 },
                 new string[]{}
             }
-          });
-      })
-      .AddAuthentication(x =>
-      {
-          x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-          x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-      })
-        .AddJwtBearer(x =>
-        {
-            x.RequireHttpsMetadata = false;
-            x.SaveToken = true;
-            x.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(appBuilder.Configuration["AppSettings:Secret"])),
-                ValidateIssuer = false,
-                ValidateAudience = false
-            };
         });
-
-    appBuilder.Logging.ClearProviders();
-    appBuilder.Host.UseNLog(new NLogAspNetCoreOptions { AutoShutdown = true, });
-
-
-    var app = appBuilder.Build();
-
-    if (app.Environment.IsDevelopment())
+    })
+    .AddAuthentication(x =>
     {
-        app.Services.GetRequiredService<ISeeder>()?.Seed();
-        app
-        .UseSwagger()
-        .UseSwaggerUI();
-    }
+      x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+      x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+      .AddJwtBearer(x =>
+      {
+        x.RequireHttpsMetadata = false;
+        x.SaveToken = true;
+        x.TokenValidationParameters = new TokenValidationParameters
+        {
+          ValidateIssuerSigningKey = true,
+          IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(appBuilder.Configuration["AppSettings:Secret"])),
+          ValidateIssuer = false,
+          ValidateAudience = false
+        };
+      });
 
+  // appBuilder.Logging.ClearProviders();
+  appBuilder.Host.UseNLog(new NLogAspNetCoreOptions { AutoShutdown = true, });
+
+
+  var app = appBuilder.Build();
+
+  if (app.Environment.IsDevelopment())
+  {
+    app.Services.GetRequiredService<ISeeder>()?.Seed();
     app
-      .UseCors(b => b
-        .WithOrigins(APP_URL, CLIENT_URL)
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials()
-      )
-      .UseAuthorization();
+    .UseSwagger()
+    .UseSwaggerUI();
+  }
 
-    app.MapControllers();
+  app
+    .UseHttpLogging()
+    .UseCors(b => b
+      .WithOrigins(APP_URL, CLIENT_URL)
+      .AllowAnyHeader()
+      .AllowAnyMethod()
+      .AllowCredentials()
+    )
+    .UseAuthorization();
 
-    app.MapGet("/", async ctx => await ctx.Response.SendFileAsync(Path.Combine(Directory.GetCurrentDirectory(), "dist/index.html")));
+  app.MapControllers();
 
-    app.Run(APP_URL);
+  app.MapGet("/", async ctx => await ctx.Response.SendFileAsync(Path.Combine(Directory.GetCurrentDirectory(), "dist/index.html")));
+
+  app.Run(APP_URL);
 
 }
 catch (Exception e)
 {
-    logger.Error(e, "Stopped program because of exception");
-    throw;
+  logger.Error(e, "Stopped program because of exception");
+  throw;
 }

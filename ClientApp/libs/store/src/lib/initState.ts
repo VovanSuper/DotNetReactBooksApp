@@ -1,16 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { LOCAL_STORAGE_APP_REDUX_STATE_KEY } from '@books-client/const';
-import { IAppState, IBook, LoadingStatus } from '@books-client/models';
-import { Dictionary } from '@reduxjs/toolkit';
+import { IAppState, LoadingStatus } from '@books-client/models';
 
 const initState: IAppState = {
     books: {
         entities: {},
-        ids: []
+        ids: [],
+        selectedBooks: null,
     },
-    user: { user: { email: undefined, id: undefined, isAuth: false, name: undefined, token: undefined }, loadingStatus: LoadingStatus.NOT_LOADED }
+    user: { user: { email: undefined, id: undefined, isAuth: false, name: undefined, token: undefined }, loadingStatus: LoadingStatus.NOT_LOADED },
 };
-
 
 export const getInitState = (): IAppState => {
     const stateFromLS = window.localStorage.getItem(LOCAL_STORAGE_APP_REDUX_STATE_KEY);

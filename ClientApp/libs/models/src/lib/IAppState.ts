@@ -8,9 +8,9 @@ export const BOOKS_FEATURE_KEY = 'books';
 export const USER_FEATURE_KEY = 'user';
 
 export interface IAppState {
-  user: {
-    user?: IAuthUser,
-    loadingStatus: TLoadingStatus;
-  };
-  books?: EntityState<IBook>,
+    user: {
+        user?: IAuthUser;
+        loadingStatus: TLoadingStatus;
+    };
+    books?: EntityState<IBook> & { selectedBooks: number[] | null };
 }

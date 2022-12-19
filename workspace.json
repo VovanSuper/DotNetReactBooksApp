@@ -1,0 +1,15 @@
+{
+    "$schema": "./node_modules/nx/schemas/workspace-schema.json",
+    "version": 2,
+    "projects": {
+        "hooks": "ClientApp/libs/hoooks",
+        "models": "ClientApp/libs/models",
+        "books-client": "ClientApp/apps/books-client",
+        "books-client-e2e": "ClientApp/apps/books-client-e2e",
+        "services": "ClientApp/libs/services",
+        "shared-constants": "ClientApp/libs/shared/constants",
+        "shared-environment": "ClientApp/libs/shared/environment",
+        "store": "ClientApp/libs/store",
+        "ui": "ClientApp/libs/ui"
+    }
+}

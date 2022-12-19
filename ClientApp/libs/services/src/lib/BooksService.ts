@@ -24,8 +24,7 @@ export class BooksService {
 
     static getBook: IGetSingle = async ({ id }, signal?: AbortSignal) => $api.get<IBook>(apiEndpoint.Books, { params: { id }, signal }).then((resp) => resp.data);
 
-    static deleteBook: IDeleteSingle = async ({ id }, signal?: AbortSignal) =>
-        $api.delete<IBook>(apiEndpoint.Books, { params: { id }, signal }).then((resp) => resp.data);
+    static deleteBook: IDeleteSingle = async ({ id }, signal?: AbortSignal) => $api.delete<IBook>(apiEndpoint.Books, { data: { id }, signal }).then((resp) => resp.data);
 
     static updateBook: IUpdateSingle = async ({ id }, payload, signal?: AbortSignal) =>
         $api.patch<IBook>(apiEndpoint.Books, payload, { params: { id }, signal }).then((resp) => resp.data);
